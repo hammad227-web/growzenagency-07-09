@@ -24,10 +24,14 @@ CREATE TABLE IF NOT EXISTS public.bookings (
   phone TEXT,
   email TEXT,
   service TEXT NOT NULL,
+  budget TEXT,
   package_tier TEXT,
   message TEXT,
   status TEXT DEFAULT 'new'
 );
+
+-- If you already created the bookings table previously, run this to add the budget column:
+-- ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS budget TEXT;
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
@@ -86,6 +90,7 @@ export async function saveBookingToSupabase(
     phone: formData.phone.trim(),
     email: formData.email.trim(),
     service: formData.service,
+    budget: formData.budget?.trim() || '',
     package_tier: formData.packageTier,
     message: formData.message.trim(),
     status: 'new',
@@ -96,22 +101,57 @@ export async function saveBookingToSupabase(
   saveLocalBooking(localRecord);
 
   try {
-    // Attempt inserting into 'bookings' table
-    const { data, error } = await supabase
+    // Attempt inserting into 'bookings' table with budget
+    const insertPayload: Record<string, any> = {
+      full_name: localRecord.full_name,
+      phone: localRecord.phone,
+      email: localRecord.email,
+      service: localRecord.service,
+      package_tier: localRecord.package_tier,
+      message: localRecord.message,
+      status: 'new',
+    };
+
+    if (localRecord.budget) {
+      insertPayload.budget = localRecord.budget;
+    }
+
+    let { data, error } = await supabase
       .from('bookings')
-      .insert([
-        {
-          full_name: localRecord.full_name,
-          phone: localRecord.phone,
-          email: localRecord.email,
-          service: localRecord.service,
-          package_tier: localRecord.package_tier,
-          message: localRecord.message,
-          status: 'new',
-        },
-      ])
+      .insert([insertPayload])
       .select('id, created_at')
       .single();
+
+    // If budget column does not exist yet in user's existing table, retry without column
+    if (error && (error.message?.includes('budget') || error.code === '42703')) {
+      const fallbackMessage = localRecord.budget
+        ? `[Budget: ${localRecord.budget}]\n${localRecord.message}`
+        : localRecord.message;
+
+      const fallbackPayload = {
+        full_name: localRecord.full_name,
+        phone: localRecord.phone,
+        email: localRecord.email,
+        service: localRecord.service,
+        package_tier: localRecord.package_tier,
+        message: fallbackMessage,
+        status: 'new',
+      };
+
+      const retryRes = await supabase
+        .from('bookings')
+        .insert([fallbackPayload])
+        .select('id, created_at')
+        .single();
+
+      if (!retryRes.error) {
+        return {
+          success: true,
+          id: retryRes.data?.id,
+          source: 'supabase',
+        };
+      }
+    }
 
     if (error) {
       console.warn('Supabase insert notice:', error);

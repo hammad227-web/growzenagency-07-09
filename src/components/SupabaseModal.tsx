@@ -315,11 +315,16 @@ export const SupabaseModal: React.FC<SupabaseModalProps> = ({ isOpen, onClose })
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 pt-1 border-t border-white/[0.06] text-[11px]">
+                      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-white/[0.06] text-[11px]">
                         <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-medium">
                           {b.service}
                         </span>
                         <span className="text-slate-400">• {b.package_tier}</span>
+                        {b.budget && (
+                          <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-medium border border-emerald-500/20">
+                            Budget: {b.budget}
+                          </span>
+                        )}
                       </div>
 
                       {b.message && (

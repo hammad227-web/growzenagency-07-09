@@ -51,6 +51,7 @@ export interface BookingFormData {
   phone: string;
   email: string;
   service: string;
+  budget?: string;
   packageTier: string;
   message: string;
 }
@@ -62,6 +63,7 @@ export interface SupabaseBookingRecord {
   phone: string;
   email: string;
   service: string;
+  budget?: string;
   package_tier: string;
   message: string;
   status?: string;

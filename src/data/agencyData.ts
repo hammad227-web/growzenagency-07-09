@@ -5,7 +5,7 @@ export const AGENCY_CONFIG = {
   tagline: 'Creative Vision Meets Digital Growth Solutions',
   subheadline:
     'From showstopping graphic design and high-converting Shopify stores to data-backed Meta Ads and search dominance — we engineer brands that lead.',
-  phoneDisplay: '+92 331 7157073',
+  phoneDisplay: '+92-331-7157073',
   phoneRaw: '+923317157073',
   whatsappUrl: 'https://wa.me/923317157073',
   email: 'grozen01@gmail.com',
@@ -245,7 +245,7 @@ export const TESTIMONIALS_LIST: TestimonialItem[] = [
     company: 'Apex Retailers',
     rating: 5,
     review:
-      'Our website SEO and Google ranking skyrocketed after their technical overhaul. The team is transparent, skilled, and incredibly easy to reach on WhatsApp at +92 331 7157073.',
+      'Our website SEO and Google ranking skyrocketed after their technical overhaul. The team is transparent, skilled, and incredibly easy to reach on WhatsApp at +92-331-7157073.',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
     projectType: 'SEO & Performance Overhaul',
   },

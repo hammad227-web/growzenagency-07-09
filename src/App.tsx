@@ -16,6 +16,7 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { BackToTop } from './components/BackToTop';
+import { PromoModal } from './components/PromoModal';
 
 export default function App() {
   const [selectedService, setSelectedService] = useState<string>('Graphic Design');
@@ -90,6 +91,9 @@ export default function App() {
 
       {/* Floating Back to Top button (bottom-left) */}
       <BackToTop />
+
+      {/* Promotional Pop-Up (appears once per session) */}
+      <PromoModal onScrollToBooking={scrollToBooking} />
     </div>
   );
 }
